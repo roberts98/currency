@@ -1,32 +1,42 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import styled from 'styled-components';
 
 import { RootState } from '../../store/reducers';
-import { removeTransaction } from '../../store/actions/transaction';
+import { Colors } from '../../styles/colors';
+import Heading from '../styled/Heading';
+import TransactionItem from './TransactionItem';
 
 function TransactionsList() {
-  const dispatch = useDispatch();
   const {
     transactions: { items },
-    currency: { conversionRate },
   } = useSelector((state: RootState) => state);
 
-  function handleRemoveClick(id: string) {
-    dispatch(removeTransaction(id));
+  if (!items.length) {
+    return null;
   }
 
   return (
-    <div>
-      {items.map((item) => (
-        <div>
-          <h3>
-            {item.eurAmount}EUR - {item.name} - {item.eurAmount * conversionRate}PLN
-          </h3>
-          <button onClick={() => handleRemoveClick(item.id)}>Remove me</button>
-        </div>
-      ))}
-    </div>
+    <Wrapper>
+      <Heading>All transactions</Heading>
+      <List>
+        {items.map((item) => (
+          <TransactionItem key={item.id} item={item} />
+        ))}
+      </List>
+    </Wrapper>
   );
 }
+
+const Wrapper = styled.div`
+  padding: 30px 60px 30px 200px;
+  background-color: ${Colors.light};
+  width: 50%;
+`;
+
+const List = styled.ul`
+  list-style: none;
+  padding-left: 0;
+`;
 
 export default TransactionsList;

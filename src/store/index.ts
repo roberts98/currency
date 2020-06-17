@@ -1,9 +1,16 @@
-import { createStore } from 'redux';
+import { createStore, compose } from 'redux';
 
 import rootReducer from './reducers';
 
+declare global {
+  interface Window {
+    __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: typeof compose;
+  }
+}
+
 function makeStore() {
-  const store = createStore(rootReducer);
+  const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+  const store = createStore(rootReducer, composeEnhancers());
 
   return store;
 }
